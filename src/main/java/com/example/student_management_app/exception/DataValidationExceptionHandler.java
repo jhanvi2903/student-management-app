@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,5 +26,16 @@ public class DataValidationExceptionHandler {
         });
 
         return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(StudentNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleStudentNotFoundException(StudentNotFoundException exc) {
+        Map<String, String> errorResponse = new HashMap<>();
+
+        errorResponse.put("error", exc.getMessage());
+        errorResponse.put("timestamp", LocalDateTime.now().toString());
+        errorResponse.put("status", HttpStatus.NOT_FOUND.toString());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

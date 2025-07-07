@@ -1,13 +1,16 @@
 package com.example.student_management_app.service;
 
+import com.example.student_management_app.exception.StudentNotFoundException;
 import com.example.student_management_app.model.Student;
 import com.example.student_management_app.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -22,8 +25,8 @@ public class StudentService {
         return studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user not found"));
     }
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public Page<Student> getAllStudents(Pageable pageable) {
+        return studentRepository.findAll(pageable);
     }
 
     public void deleteStudent(int id) {
@@ -39,4 +42,15 @@ public class StudentService {
 
         return existingStudent;
     }
+
+    public List<Student> getStudentByName(String name) {
+        List<Student> students = studentRepository.findByName(name);
+
+        if(students.isEmpty()) {
+            throw new StudentNotFoundException("Student " + name + " not found");
+        }
+
+        return students;
+    }
+
 }
