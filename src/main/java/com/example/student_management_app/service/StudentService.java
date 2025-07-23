@@ -1,12 +1,13 @@
 package com.example.student_management_app.service;
 
+import com.example.student_management_app.dto.StudentRequestDTO;
 import com.example.student_management_app.exception.StudentNotFoundException;
-import com.example.student_management_app.model.Student;
+import com.example.student_management_app.model.StudentEntity;
 import com.example.student_management_app.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +18,20 @@ public class StudentService {
 
     @Autowired
     StudentRepository studentRepository;
-    public Student createStudent(Student student) {
-        return studentRepository.save(student);
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public StudentEntity createStudent(StudentRequestDTO student) {
+        StudentEntity entity = modelMapper.map(student, StudentEntity.class);
+        return studentRepository.save(entity);
     }
 
-    public Student getStudentById(int id) {
-        return studentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user not found"));
+    public StudentEntity getStudentById(int id) {
+        return studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException("Student " + id + " not found"));
     }
 
-    public Page<Student> getAllStudents(Pageable pageable) {
+    public Page<StudentEntity> getAllStudents(Pageable pageable) {
         return studentRepository.findAll(pageable);
     }
 
@@ -33,8 +39,8 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-    public Student updateStudent(int id, Student student) {
-        Student existingStudent = getStudentById(id);
+    public StudentEntity updateStudent(int id, StudentEntity student) {
+        StudentEntity existingStudent = getStudentById(id);
         existingStudent.setName(student.getName());
         existingStudent.setMarks(student.getMarks());
 
@@ -43,8 +49,8 @@ public class StudentService {
         return existingStudent;
     }
 
-    public List<Student> getStudentByName(String name) {
-        List<Student> students = studentRepository.findByName(name);
+    public List<StudentEntity> getStudentByName(String name) {
+        List<StudentEntity> students = studentRepository.findByName(name);
 
         if(students.isEmpty()) {
             throw new StudentNotFoundException("Student " + name + " not found");

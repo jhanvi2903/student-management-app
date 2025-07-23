@@ -1,5 +1,6 @@
 package com.example.student_management_app.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -18,11 +19,18 @@ public class DataValidationExceptionHandler {
     public ResponseEntity<Map<String, String>> handleDataValidationException(MethodArgumentNotValidException exc) {
         Map<String, String> errorsMap = new HashMap<>();
 
-        exc.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError)error).getField();
+        // Handles field level error
+        exc.getBindingResult().getFieldErrors().forEach((error) -> {
+            String fieldName = error.getField();
             String message = error.getDefaultMessage();
 
             errorsMap.put(fieldName, message);
+        });
+
+        // Handles class level error, such as custom password matches annotation
+        exc.getBindingResult().getGlobalErrors().forEach(error -> {
+            // Use object name or custom key for class-level errors
+            errorsMap.put(error.getObjectName(), error.getDefaultMessage());
         });
 
         return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);

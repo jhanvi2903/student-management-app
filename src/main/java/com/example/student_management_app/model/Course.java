@@ -21,7 +21,7 @@ public class Course {
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     @JsonManagedReference()
-    List<Student> students;
+    List<StudentEntity> students;
 
     public int getId() {
         return id;
@@ -55,11 +55,11 @@ public class Course {
         this.description = description;
     }
 
-    public List<Student> getStudents() {
+    public List<StudentEntity> getStudents() {
         return students;
     }
 
-    public void setStudents(List<Student> students) {
+    public void setStudents(List<StudentEntity> students) {
         this.students = students;
     }
 }
