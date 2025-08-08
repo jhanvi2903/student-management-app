@@ -25,9 +25,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.Map;
 
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @WebMvcTest(controllers = StudentController.class)
 public class StudentControllerTest {
@@ -90,6 +91,8 @@ public class StudentControllerTest {
         Assertions.assertEquals(studentRequestDTO.getEmail(), createdStudent.getEmail(), "The student email should be correct");
         Assertions.assertEquals(studentRequestDTO.getMarks(), createdStudent.getMarks(), "The student marks should be correct");
         Assertions.assertNotNull(studentEntity.getId());
+
+        verify(studentService, times(1)).createStudent(any());
     }
 
     @Test
