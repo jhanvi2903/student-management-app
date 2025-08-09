@@ -25,9 +25,7 @@ public class StudentRepositoryIntegrationTest {
         course.setCourseName("CS");
         course.setDescription("Computer Science");
 
-
         studentEntity = new StudentEntity();
-
         studentEntity.setName("Jhanvi");
         studentEntity.setEmail("jhanvi@gmail.com");
         studentEntity.setCourse(course);
@@ -38,7 +36,6 @@ public class StudentRepositoryIntegrationTest {
     
     @Test
     void testStudentEntity_whenValidStudentDetailsProvided_shouldReturnStoredStudentDetails() {
-
         // Act
         Course course1 = testEntityManager.persistAndFlush(course);
         StudentEntity storedStudentEntity = testEntityManager.persistAndFlush(studentEntity);
