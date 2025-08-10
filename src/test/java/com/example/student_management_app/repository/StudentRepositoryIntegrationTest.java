@@ -1,3 +1,5 @@
+//Database integration testing - using @DataJpaTest
+
 package com.example.student_management_app.repository;
 
 import com.example.student_management_app.model.Course;

@@ -43,6 +43,7 @@ public class StudentService {
         StudentEntity existingStudent = getStudentById(id);
         existingStudent.setName(student.getName());
         existingStudent.setMarks(student.getMarks());
+        existingStudent.setEmail(student.getEmail());
 
         studentRepository.save(existingStudent);
 
